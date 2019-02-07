@@ -6,7 +6,7 @@ A Kubernetes installation — which frequently takes place on more than one mac
 
 This lab assumes you have a cluster set up already. If you don't, most cloud providers offer a managed Kubernetes service. You can also use `terraform` to set up a cluster on Digital ocean, which offers $100 in free credit for new users — check out [Ponderosa's blog post]() for more info on that.
 
-## Prework 0 — Setting up a cluster
+## Prework — Setting up a cluster
 
 If you're a [Ponderosa](https://ponderosa.io) workshop participant, you should already have a Kubernetes cluster set up for you — check your email for details. If you're doing this outside of a workshop, you can create a cluster on whichever cloud provider you want, or use [Minikube](https://kubernetes.io/docs/setup/minikube/), which lets you run a one-node Kubernetes cluster on your local machine.[^0]  To create a cluster on [Digital Ocean](https://www.digitalocean.com/), you can run `terraform apply` from this directory (you'll need to [get a Digital Ocean account (and $100 of free credit!)](https://try.digitalocean.com/performance/) and [install `terraform`](https://learn.hashicorp.com/terraform/getting-started/install.html) first).
 
@@ -75,6 +75,6 @@ Useful docs: [`kubectl describe`](https://kubernetes.io/docs/reference/generated
 1. Use the `explain` subcommand to learn what a `service` is. 
 2. Bookmark the Kubernetes [concepts docs](https://kubernetes.io/docs/concepts/) and [reference docs](https://kubernetes.io/docs/reference/#api-reference) in your browser. Take a moment to poke around each one.
 
-Useful docs: [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get), [`kubectl` operations](https://kubernetes.io/docs/reference/kubectl/overview/#operations)
+**Useful docs:** [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get), [`kubectl` operations](https://kubernetes.io/docs/reference/kubectl/overview/#operations)
 
 [^0]: Most cloud providers provide Kubernetes as a service, but if you're interested in setting up your own, try [Kubernetes the hard way](https://github.com/kelseyhightower/kubernetes-the-hard-way). 
