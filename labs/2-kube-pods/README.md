@@ -1,4 +1,4 @@
-#Lab 2 - Pods and `kubectl create`
+# Lab 2 - Pods and `kubectl create`
 
 ## Introduction
 
