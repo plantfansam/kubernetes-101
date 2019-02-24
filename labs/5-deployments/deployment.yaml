@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: combo-suggester-deployment
+  labels:
+    app: topping-combo-suggester
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: topping-combo-suggester
+  template:
+    metadata:
+      labels:
+        app: topping-combo-suggester
+    spec:
+      containers:
+      - name: topping-combo-suggester-pod
+        image: ponderosa/topping-combo-suggester-slow-startup:0.1
+        ports:
+        - containerPort: 9876
+        readinessProbe:
+          httpGet:
+            path: "/health-check"
+            port: 9876
+          initialDelaySeconds: 10

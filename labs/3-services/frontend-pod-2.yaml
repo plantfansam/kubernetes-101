@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubernetes-101-frontend-2
+  labels:
+    app: kubernetes-101-frontend
+spec:
+  containers:
+  - name: frontend
+    image: ponderosa/kubernetes-101-frontend:0.2
+    ports:
+    - containerPort: 8080

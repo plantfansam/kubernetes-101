@@ -55,7 +55,7 @@ The `kubectl create` command can accept input from `stdin`, so the following wil
 
   `cat pod.yaml | kubectl create`
 
-## Prework — Setting up a  cluster
+## Prework — Setting up a cluster
 
 This lab assumes you have a running Kubernetes cluster and `kubectl` configured to interact with that cluster. For instructions on doing that, see [lab 1](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/1-kube-clusters).
 
@@ -65,14 +65,12 @@ In [lab 0](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/0-doc
 
 **Tasks:** 
 
-0. Create a YAML manifest for a pod that runs your Docker image
-1. Run that pod in your Kubernetes cluster
+0. Create `pod.yaml`, a manifest for a pod that runs your Docker image
+1. Run that pod in your Kubernetes cluster. When you run `kubectl get pods`, you should see a running pod with your specified name!
 
 **Useful docs**: the YAML above, [`kubectl create`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands) 
 
 **Shortcuts**: if you haven't built the Docker image from [lab 0](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/0-docker), you can use the container image  `ponderosa/kubernetes-101-frontend:0.1`
-
-**Check your work:** when you run `kubectl get pods`, you should see a running pod with your specified name!
 
 ## Exercise 1 — Accessing your pod with port forwarding
 
@@ -80,11 +78,9 @@ In production, you won't use `kubectl port-forward` to access running pods over 
 
 **Tasks**: 
 
-0.  Make your pod's port `8080` accessible to your host machine on [http//localhost:1234](http//localhost:1234)
+0.  Make your pod's port `8080` accessible to your host machine on [http//localhost:1234](http//localhost:1234). Visit http//localhost:1234](http//localhost:1234) — you should see our app running.
 
 **Useful docs:** [Kubernetes docs examples](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/#forward-a-local-port-to-a-port-on-the-pod), [`kubectl port-forward`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#port-forward)
-
-**Check your work**: visit [http//localhost:1234](http//localhost:1234) — you should see our app running.
 
 ## Exercise 2 — Breaking, fixing, and deleting a pod
 
@@ -98,16 +94,36 @@ In production, you won't use `kubectl port-forward` to access running pods over 
 
 **Useful docs: ** [`kubectl edit`](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-edit), [`kubectl delete`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
 
-## Exercise 3 — Adding and retrieving by label
+## Exercise 3 — Executing commands inside a pod
 
-In Kubernetes, you can mark objects in the cluster with arbitrary key/value pairs called [`labels`](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/).  `kubectl label object-type object-id labelkey=labelvalue` (a label is a key/value pair.). They are incredibly useful when you want to deal with multiple Kubernetes objects as a logical unit (you just wait!). You can show the labels attached to a given object by appending `--show-labels` to the `get` command. Labels will also appear if you `kubectl describe` an object. 
+\# todo
+
+## Exercise 4 — Adding labels and retrieving pods using selectors
+
+In Kubernetes, you can mark objects in the cluster with arbitrary key/value pairs called [`labels`](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/). The command will look something like: `kubectl label object-type object-id labelkey=labelvalue` (a label is a key/value pair.). Labels are incredibly useful when you want to deal with multiple Kubernetes objects as a logical unit (you just wait!). 
+
+You can show the labels attached to a given object by appending `--show-labels` to the `get` command. Labels will also appear if you `kubectl describe` an object. 
 
 **Tasks:**
 
-0. Redeploy your pod to your Kubernetes cluster (use the same steps as exercise 0)
-1. Add 
+0. Redeploy your `pod.yaml` to your Kubernetes cluster (use the same steps as exercise 0). Then, add whatever label you like to your pod using `kubectl label` (may we humbly suggest `app=mycoolapp`). Once you've done that, verify that it worked with `kubectl get pods --show-labels`. After verification, delete your pod.
+1. Update your `pod.yaml` to specify whichever label you added manually with `kubectl label` and redeploy `pod.yaml`. Verify that it worked with `kubectl get pod --show-labels`.
+2. Retrieve your labelled pod using the `--selector` option of `kubectl get`. The output should look the same as `kubectl get pods`. 
+
+**Useful docs:** [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+
+## Exercise 5 — Adding annotation
+
+Kubernetes supports another type of arbitrary key/value pairs: [annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)! They *cannot be used to identify anything using the Kubernetes API*, but provide a way to tack information onto Kubernetes objects. Annotation are useful for third-party tooling, beta features, and more. When creating an annotation, it's customary to include a prefix on the key to avoid collisions[^1]
+
+**Tasks**:
+
+0. Add an annotation to one of your `nodes` with `kubectl annotate`
+
+**Useful docs:** [`kubectl annotate`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#annotate)
 
 
 
-[^0] Note: `kubectl edit` isn't a  maintainable workflow, as your running workloads will drift from what's specified in your YAML. Generally if your pod's configuration is busted, it's good practice to delete it, update the YAML that generated it, and create an entirely new pod with `kubectl create -f`.
+[^0]: Note: `kubectl edit` isn't a  maintainable workflow, as your running workloads will drift from what's specified in your YAML. Generally if your pod's configuration is busted, it's good practice to delete it, update the YAML that generated it, and create an entirely new pod with `kubectl create -f`.
 
+[^1]: As an example: imagine an engineer working on the same cluster and decide to annotate one of their nodes with `active=true` for whatever reason. Then, they hook up some cluster automation software that _also_ tries to label that node with `active=true`. The annotation would error out! This could have been avoided if the application engineer had annotated the node with `mycoolcompany./active=true` and/or the automation software provider used the annotation `mycoolautomationcompany.rodeo/active=true`

@@ -2,9 +2,12 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: kubernetes-101-frontend
+  labels:
+    app: wat
 spec:
   containers:
   - name: frontend
-    image: mhausenblas/simpleservice:0.5.0
+    image: nginx
+    #image: ponderosa/kubernetes-101-frontend:0.1
     ports:
-    - containerPort: 9876
+    - containerPort: 80

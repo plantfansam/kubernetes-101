@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: combo-suggester-rs
+  labels:
+    app: topping-combo-suggester
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: topping-combo-suggester
+  template:
+    metadata:
+      labels:
+        app: topping-combo-suggester
+    spec:
+      containers:
+      - name: topping-combo-suggester-pod
+        image: ponderosa/topping-combo-suggester:0.1
+        ports:
+        - containerPort: 5001

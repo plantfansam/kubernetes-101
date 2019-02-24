@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: intellipod
+  labels:
+    app: intellipod
+spec:
+  containers:
+  - name: frontend
+    image: ponderosa/intellipod
+    ports:
+    - containerPort: 5000
