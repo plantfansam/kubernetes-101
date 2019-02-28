@@ -2,7 +2,7 @@
 
 ## Introduction
 
-After raising a series C of $100 million, WebScale Pizza is investing heavily in the the stability of the app, along with an in-house brick oven pizzeria. Gone are the days of testing in production. The VP of Engineering, Kara Marinara, has told the DevOps team to create a `staging` environment where engineers can test out new code before deploying to production. We'll use `namespaces` to do it.
+After raising a series C of $100 million, HyprSkale Pizza is investing heavily in the the stability of the app, along with an in-house brick oven pizzeria. Gone are the days of testing in production. The VP of Engineering, Kara Marinara, has told the DevOps team to create a `staging` environment where engineers can test out new code before deploying to production. We'll use `namespaces` to do it.
 
 ### What's a namespace?
 
