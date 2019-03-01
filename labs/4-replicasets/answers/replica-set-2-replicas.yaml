@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: topping-suggestion-pod
-          image: ponderosa/topping-suggestion:1.2
+          image: ponderosa/topping-suggestion:1.3
           ports:
             - containerPort: 9876

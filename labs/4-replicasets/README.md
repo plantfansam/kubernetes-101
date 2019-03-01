@@ -49,7 +49,7 @@ This lab assumes you have a running Kubernetes cluster and `kubectl` configured 
 
 **Tasks:**
 
-0. Write the manifest for a `ReplicaSet` with three identical pods that serve the `topping-suggestion` application (there's a pre-baked Docker image at `ponderosa/topping-suggestion:1.2` and a working pod spec in the `resources/` directory). Add the `ReplicaSet` to the cluster with `kubectl apply`. 
+0. Write the manifest for a `ReplicaSet` with three identical pods that serve the `topping-suggestion` application (there's a pre-baked Docker image at `ponderosa/topping-suggestion:1.3` and a working pod spec in the `resources/` directory). Add the `ReplicaSet` to the cluster with `kubectl apply`. 
 0. `kubectl describe` can get you more information about your `ReplicaSet`. Use it to figure out the first three events that are associated with the `ReplicaSet`. Next, use `kubectl describe` to find out who the pod is `Controlled By`.
 0. Update the ReplicaSet to have two replicas and use `kubectl apply`to update the cluster. Use `kubectl get pods` and `kubectl describe rs` to evaluate the results.
 0. Use `kubectl scale` to increase the replica count to 4 and verify the results.
@@ -91,6 +91,7 @@ If you delete a `ReplicaSet`, it will also delete the pods that it manages. By u
 
 0. Delete your `ReplicaSet` without deleting its constituent pods.
 0. Delete all pods in the cluster.
+0. Delete your `topping-suggestion` service.
 
 [^0]: Note that `scale` is an [_imperative_](https://kubernetes.io/docs/concepts/overview/object-management-kubectl/overview/#imperative-commands) object management technique, while `kubectl apply -f my-cool-yaml.yaml` is a [_declarative_](https://kubernetes.io/docs/concepts/overview/object-management-kubectl/declarative-config/) object management technique. It's generally best to stick to one or the other, rather than mixing them.
 
