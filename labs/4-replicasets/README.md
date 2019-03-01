@@ -76,7 +76,16 @@ Note: skip this if you're running in MiniKube.
 
 **Useful docs:** [`kubectl edit`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#edit), 
 
-## Exercise 3 — Deleting a `ReplicaSet`
+## Exercise 3 — Pointing a service at the `ReplicaSet`
+
+Now that we have a resilient set of pods containing our `topping-suggestion` application, it's makes sense to expose them as a service (see [Lab 3](#todo) for more details on that).
+
+**Tasks**:
+
+0. Create a `ClusterIP` service called `topping-suggestion` that serves port 80 traffic to our `ReplicaSet`'s pods (the container is serving traffic on port 9876, as indicated in `resources/topping-suggester-pod.yaml`). You may want to refer to the service definitions in the `labs/3-services/answers` directory.
+0. Launch the `utility` pod in `resources/utility-pod`, shell in, and `curl` your new service's `/topping_combo` endpoint.
+
+## Exercise 4 — Deleting a `ReplicaSet`
 
 If you delete a `ReplicaSet`, it will also delete the pods that it manages. By using the `--cascade=false` flag, you can prevent it from doing that.
 

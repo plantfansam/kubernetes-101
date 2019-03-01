@@ -1,13 +1,13 @@
 # Exercise 3 answers
 
-## Task 0 — deleting a ReplicaSet without deleting its constituent pods
+## Task 0 — creating a service pointing to the ReplicaSet pods
+
+Please see `service.yaml` in this directory for the service definition.
+
+## Task 1 — curl the service you just launched
 
 ```bash
-kubectl delete rs combo-suggester-rs --cascade=false
-```
-
-## Task 1 — deleting pods by  label selector
-
-```bash
-kubectl delete po -l app=topping-suggestion
+kubectl apply -f resources/utility-pod.yaml
+kubectl exec -it utility bash
+curl topping-suggestion/topping_combo
 ```
