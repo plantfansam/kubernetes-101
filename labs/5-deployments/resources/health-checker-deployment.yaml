@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-checker
+  labels:
+    app: health-checker
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: health-checker
+  template:
+    metadata:
+      labels:
+        app: health-checker
+    spec:
+      containers:
+        - name: health-checker-pod
+          image: ponderosa/intellipod:0.3
+          ports:
+            - containerPort: 5000
+          env:
+            - name: TOPPING_SUGGESTION_URL
+              value: http://topping-suggestion
+            - name: FRONTEND_URL
+              value: http://frontend

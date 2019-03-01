@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: combo-suggester-deployment
+  name: topping-suggestion-deployment
   labels:
     app: topping-suggestion
 spec:
-  replicas: 4
+  replicas: 2
   strategy:
     type: RollingUpdate
   selector:
@@ -18,11 +18,10 @@ spec:
     spec:
       containers:
         - name: topping-suggestion-pod
-          image: ponderosa/topping-suggestion-slow-startup:0.1
+          image: ponderosa/topping-suggestion-slow-startup:1.3
           ports:
             - containerPort: 9876
           readinessProbe:
             httpGet:
               path: "/health-check"
               port: 9876
-            initialDelaySeconds: 10

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: topping-suggestion-service
+  name: health-checker
 spec:
   ports:
     - name: default
       port: 80
-      targetPort: 9876
+      targetPort: 5000
       protocol: TCP
   selector:
-    app: topping-suggestion
-  type: NodePort
+    app: health-checker
+  type: LoadBalancer
