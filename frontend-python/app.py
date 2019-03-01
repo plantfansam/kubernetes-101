@@ -30,7 +30,7 @@ def pizza():
 def get_topping_combo_from_microservice():
     topping_combo_endpoint = os.path.join(topping_combo_suggester_root_url(),
                                           "topping_combo")
-    return requests.get(topping_combo_endpoint, timeout=3)
+    return requests.get(topping_combo_endpoint, timeout=1)
 
 
 def topping_combo_suggester_root_url():
