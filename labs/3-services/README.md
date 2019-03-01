@@ -6,26 +6,30 @@
 >
 > — [Kubernetes docs](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-When running applications on Kubernetes, you often want to find pods so you can make web requests to them — if you've deployed two microservices (say...`pizza-builder-frontend` and `topping-suggestion-api-service`), you need a way to reliably reach `topping-suggestion-api-service` (otherwise how will people learn that anchovy pineapple is their ideal slice?). Enter Kubernetes [services](https://kubernetes.io/docs/concepts/services-networking/service/). When you create a service, you provide a stable [`ClusterIP`](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)[^0] and DNS name that distributes inbound traffic to a set of pods (this is also known as ([load balancing](https://en.wikipedia.org/wiki/Load_balancing_(computing))). Pods are included in a service by virtue of matching its configured labels. So this service, for example, will forward requests to `topping-suggestion-api-service` to pods with label `app`=`topping-combo-suggestion-api`:
+When running applications on Kubernetes, HyprSk8l Pizza will need to find pods in order to route network requests to them — remember, we're not going to use `kubectl port-forward` in production. This is particularly relevant because HyprSk8l Pizza recently made the leap to [microservices](https://microservices.io/); not only do end users need to access the `hs-pizza-frontend` from the internet, `hs-pizza-frontend` needs  to talk to the `topping-suggestion-service` in order to deliver value to customers (otherwise how will people learn that anchovy pineapple is their ideal slice?). The microservice architecture looks like this:
+
+![service architecture diagram](service-architecture.png)
+
+Enter Kubernetes [services](https://kubernetes.io/docs/concepts/services-networking/service/). When you create a Kubernetes service, Kubernetes provide a stable [`ClusterIP`](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)[^0] and DNS name that distributes traffic to a defined set of pods (this is also known as ([load balancing](https://en.wikipedia.org/wiki/Load_balancing_(computing))). **Pods are included in a service by virtue of matching its configured labels.** So the following service, for example, would forward in-cluster requests to `topping-suggestion-service` to pods with the label `app`=`topping-suggestion`:
 
 ```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: topping-suggestion-api-service
+  name: topping-suggestion-service
 spec:
   ports:
   - targetPort: 80
   selector:
-    app: topping-suggestion-api
+    app: topping-suggestion
 ```
 
 You can expose services in a variety of ways, both within and outside the cluster:
 
 *  `ClusterIP` — service is available at a stable IP inside of the Kube cluster. Access with `curl ClusterIp`.
-* `NodePort` — service is available at `ClusterIP` and available on a specific port on each cluster node (so you can `curl any.node.ip.address:nodeport`). 
-* `LoadBalancer` — provisions a `LoadBalancer` wherever the cluster is hosted and routes traffic from there to the service. You can `curl load-balancer-url:port` to access it. This makes the service accessible from outside the cluster. Note: if you're running in `minikube` this type of service [may take some work to set up](https://github.com/kubernetes/minikube/issues/384).
-* `ExternalName` — makes a DNS name addressable with [Kubernetes service semantics](https://kubernetes.io/docs/concepts/services-networking/service/#externalname). This is quite different than exposing pods as a service, so we won't cover it in this lab
+*  `NodePort` — service is available at `ClusterIP` and available on a specific port on each cluster node (so you can `curl any.node.ip.address:nodeport`). 
+*  `LoadBalancer` — provisions a `LoadBalancer` wherever the cluster is hosted and routes traffic from there to the service. You can `curl load-balancer-url:port` to access it. This makes the service accessible from outside the cluster. Note: if you're running in `minikube` this type of service [_may_ take some work to set up](https://github.com/kubernetes/minikube/issues/384).
+*  `ExternalName` — makes a DNS name addressable with [Kubernetes service semantics](https://kubernetes.io/docs/concepts/services-networking/service/#externalname). This is quite different than exposing pods as a service, so we won't cover it in this lab.
 
 ## Prework — Setting up a cluster
 
@@ -33,51 +37,58 @@ This lab assumes you have a running Kubernetes cluster and `kubectl` configured 
 
 ## Exercise 0 — Creating a service with a `ClusterIP`
 
-In this exercise, we will create a service that's accessible at a `ClusterIP`. 
+Let's get HyprSk8l's `frontend-python` service up and running and then we can add in the topping suggestion microservice interactions. The simplest way to expose a service is via `ClusterIP` — in a `ClusterIP` service, Kubernetes DNS will also resolve in-cluster calls to `the-service-name` to that `ClusterIP`. 
+
+**Prework:**
+
+0. Make sure there are no pods running in the `default` namespace and `delete` any running pods (unless you're doing things outside of this tutorial in your cluster, of course).
+1. Look over `frontend-pod.yaml`, `frontend-pod-2.yaml` and `utility-pod.yaml` in the `resources` directory and then add the pods from each  file into the cluster with `kubectl apply -f resources/frontend-pod.yaml -f resources/frontend-pod-2.yaml -f resources/utility-pod.yaml` (your path may vary based on where you run these commands from; see [lab 2 for more details on creating Kubernetes pods](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/2-kube-pods)).
 
 **Tasks:**
 
-0. Make sure there are no pods running in the `default` namespace and `delete` any running pods (unless you're doing things outside of this tutorial in your cluster, of course).
-1. Look over `frontend-pod.yaml` and `utility-pod.yaml` and then add the pods from each  file into the cluster with `kubectl create `(see [lab 2 for more](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/2-kube-pods)).
-2. Create a file called `service.yaml` and configure a service (type: `ClusterIP`) that takes in-cluster requests to `frontend` and forwards them to the pod described in `frontend-pod.yaml`. Create the service in the cluster with `kubectl create`.
-3. Use `kubectl describe` to find your `service`'s ClusterIP. Next, get inside the running `utility` pod and use `nslookup` to find out which IP requests to `frontend` go to (it should match what showed up in `describe`). 
-4. While inside the `utility` pod, `curl` the `frontend` service to  make sure everything's working. If you get an HTML response, things are configured properly.
+0. Create a manifest (`service-clusterip.yaml`) that specifies a service with the name `frontend-via-clusterip`. The service should forward requests on port 81 to port 5000 in any pod with the label `app=hs-pizza-frontend`. The service should be of `type: ClusterIP`. Create the service in the cluster with `kubectl apply -f service-clusterip.yaml`.
+0. Use `kubectl describe` to find your `service`'s ClusterIP.
+0. Shell into the running `utility` pod using `kubectl exec` then and use `nslookup` to find out the IP that requests to `frontend-via-clusterip` go to (it should match what showed up when you ran `describe` on the service). 
+0. While inside the `utility` pod, `curl` the `/pizza` endpoint of `frontend-via-clusterip` service on (make sure you've got the port specified) to make sure everything's working. If you get an HTML response, things are configured properly.
+0. Delete your service when you're done using `kubectl delete`.
 
 **Useful docs:** [service docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe), [`nslookup`](https://linux.die.net/man/1/nslookup), [lab 2](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/2-kube-pods).
 
-##Exercise 1 — Creating a service with a `NodeIP`
+## Exercise 1 — Creating a service with a `NodeIP`
 
 In this exercise, we will create a service that's accessible on a specific port of every node in the cluster.
 
 **Tasks:**
 
-0. Make sure there are no other `frontend` services remaining in the cluster (that is: delete the one from exercise 0 if it's still around).`kubectl delete` as needed.
-1. Create a file called `service-nodeport.yaml` that takes requests to any node on port `30789` and forwards them to the pod described in `frontend-pod.yaml`.
-2. Get each of your cluster nodes' IP addresses with `kubectl describe` and them paste them somewhere. Get inside the `utility` pod and `curl` each node's IP on port 30789 and verify that you get an HTML response.
+0. Create a manifest (`service-nodeport.yaml`) that specifies a service with the name `frontend-via-nodeport`. The service should forward requests to any node on port `30789` and forward them to any pod with the label `app=hs-pizza-frontend`. Launch the service into your cluster with `kubectl apply`.
+0. Get one of your cluster nodes' IP addresses with `kubectl describe` and copy it. Get inside the `utility` pod and `curl` that node on port 30789, hitting the `/pizza` endpoint. 
+0. Get the `frontend-via-nodeport`'s ClusterIP using `kubectl describe` and hit the `/pizza` endpoint using `ClusterIP` and using DNS.
+0. Delete your service.
 
 **Useful docs:** [service docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe).
 
 ## Exercise 2 — Creating a service with a LoadBalancer
 
-In this exercise, we will create a service that's accessible outside the cluster using the `LoadBalancer`. Note: if you're running Kubernetes on a cloud provider, this can cost money! Make sure to shut things down when you're done!
+In this exercise, we will create a service that's accessible outside the cluster using the `LoadBalancer`. Note: if you're running Kubernetes on a cloud provider, this costs money! Make sure to shut things down when you're done!
 
 **Tasks:**
 
-0. Make sure there are no other `frontend` services remaining in the cluster (that is: delete the one from exercises 0 and 1 if they're still around). `kubectl delete` as needed.
-1. Create a file called `service-loadbalancer.yaml` that provisions a load balancer on your cluster's cloud provider and forwards requests to the pod described in `frontend-pod.yaml`. Create the service in the cluster with `kubectl create`.
-2. Go to your cloud provider's user interface and find your load balancer.
-3. Visit `your-loadbalancer.yourcloudprovider.com` in a browser and verify that an HTML response is present.
+0. Create a manifest (`service-nodeport.yaml`) that specifies a service with the name `frontend-via-loadbalancer`. The service should forward requests on port 80 to port 5000 on a pod with the label `app=hs-pizza-frontend`. Launch the service into your cluster with `kubectl apply`.
+0. Go to your cloud provider's user interface and find your load balancer.
+0. Visit `your-loadbalancer.yourcloudprovider.com/pizza` in a browser and verify that a response is present.
 
 **Useful docs:** [service types](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)
 
 ## Exercise 3 — Adding pods to a service
 
-In this exercise, we'll add a second pod to the `frontend` service created in exercise 2 — this isn't a normal workflow but will demonstrate how services load balance across member pods.[^1]
+In this exercise, we'll add a third pod to the `frontend` service created in exercise 2 — this isn't a normal workflow but will demonstrate how services load balance across member pods.[^1]
 
 **Tasks:**
 
-0. Create a second file (`frontend-pod-2`, perhaps) configuring a pod that will join the `frontend` service. Add the pod to the cluster with `kubectl create`. The pod should have a different name than the one specified `frontend-pod.yaml`.
-1. Hit your service using `your-loadbalancer.yourcloudprovider.com` several times and verify that the hostname on the front page changes. 
+0. Check out the `Endpoints` associated with your `frontend-via-loadbalancer service` by using `kubectl describe`; note how many there are.
+0. Update the labels on `resources/frontend-pod-3.yaml` so that it will join your `frontend-via-loadbalancer` service. Add the pod to the cluster with `kubectl apply -f`. Note that this pod intentially contains a different image than others in its service, which is _extremly_ not recommended; we're only doing it for demonstration purposes.
+0. Check out the `Endpoints` associated with your service again; you should see one more.
+0. Hit your service's `/pizza` endpoint repeatedly until it's obvious that the new pod has joined the service.
 
 ## Exercise 4 — Clean up
 
@@ -85,11 +96,11 @@ The `LoadBalancer` resource can cost money! Let's make sure we clear everything 
 
 **Tasks:**
 
-0. Delete all pods in the cluster.
-1. Delete all services in the cluster.
+0. Delete all pods in the cluster (`kubectl delete --all pods`).
+1. Delete all services you created in this lab.
 2. Go to your cloud provider's UI and make sure that you don't have any load balancers provisioned anymore.
 
-**Useful docs:** [`kubectl delete`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
+**Useful docs:** [`kubectl delete`](https://kubernekkktes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
 
 [^0]: Cluster IPs stay the same for the life of the service.
 [^1]: You'd typically control this type of thing with a [`deployment`](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) which we'll learn about in [lab 4}(#todo).

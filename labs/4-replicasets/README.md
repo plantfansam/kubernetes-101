@@ -4,13 +4,18 @@
 
 ### What's a `ReplicaSet` and why do we have them?
 
+
+In production software deployments, there's often more than one copy of a given application running. In the case of HyprSk8l Pizza, growing demand for the killer app requires that we always have 3 replicas of our CPU-intensive `topping-suggestion` app running to handle the crushing load (it uses a lot of AI...stuff). These replicas will be part of the `topping-suggestion` Kubernetes service, so traffic will be load-balanced across them. As lab 3 demonstrated, pods belong to the same service aren't necessarily based on the same image, but in the case of the `topping-suggestion` service, we just want three replicas of a `topping-suggestion` pod that runs the app.
+
+As in lab 3, we could create three almost-identical files, `topping-suggestion-pod-[1|2|3].yaml` with labels configured to join a service, and then manually launch each one with `kubectl apply`. But as we know, the `topping-suggestion` app is prone to random failures -- the microservice is prone to random failure, which is one of the reasons we're switching to Kubernetes. So in addition to launching `pizza-topping-picker-pod-[1|2|3]` manually, we'd need to monitor the individual pods to make sure they're up. What a nightmare. Wouldn't it be nice if we could just say "I want three instances of the `topping-suggestion` pod running" and have the cluster handle things for us?  In the words of Homer Simpson, "[can't someone else do it?](https://cdn-images-1.medium.com/max/800/1*P-adWnXHrR_HfC13xC-YPA.gif)" 
+
+Enter the `ReplicaSet`. 
+
 > A ReplicaSet’s purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.
 >
 > — [Kube docs](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
-In large software deployments, there's often more than one copy of a given application running. In the case of our pizza app, growing demand for our killer app may require that we have 3 replicas of our CPU-intensive `topping-combo-suggester` app to handle the crushing load (we'd load balance across the three replicas with a service, which we cover in [lab 3](#todo)). Each of these replicas would be a copy of the same `topping-combo-suggester` pod. One way to handle creating the replicas is to creating three almost-identical files, `topping-combo-suggester-pod-[1|2|3].yaml`, and then manually launch each one with `kubectl create`. As we know, the `topping-combo-suggester` app is prone to random failures, and pods go out of commission every 4-5 minutes. So in addition to launching `pizza-topping-picker-pod-[1|2|3]` manually, we'd need to monitor the individual pods to make sure they're up. What a nightmare. Wouldn't it be nice if we could just say "I want three instances of the `topping-combo-suggester` pod running" and have the cluster handle things for us?  In the words of Homer Simpson, "[can't someone else do it?](https://cdn-images-1.medium.com/max/800/1*P-adWnXHrR_HfC13xC-YPA.gif)" 
-
-Enter the `ReplicaSet`. A `ReplicaSet` keeps a given number of pods running in the cluster at all times. The manifest for a `ReplicaSet` looks about like this:
+A `ReplicaSet` keeps a given number of pods running in the cluster at all times. The manifest for a `ReplicaSet` looks about like this:
 
 ```yaml
 apiVersion: apps/v1
@@ -34,7 +39,7 @@ spec:
         image: the-docker-image
 ```
 
-The `spec` refers to the specification for the `ReplicaSet`. The `template` key is a `pod` template that's replicated   
+The `spec` refers to the specification for the `ReplicaSet`. The `template` key is a `pod` template that's replicated according the the count set in the `replicas` key. Membership in a `ReplicaSet` is determined by the labels. The `ReplicaSet` has a `matchLabels` field; any visible pods in the cluster that match those labels become managed by the `ReplicaSet`. If the `ReplicaSet` is created in the cluster, it will create as many pods as is necessary to reach its replica count.
 
 ## Prework
 
@@ -44,15 +49,16 @@ This lab assumes you have a running Kubernetes cluster and `kubectl` configured 
 
 **Tasks:**
 
-0. Write the manifest for a `ReplicaSet` with three identical pods that serve the `topping-combo-suggester` application (there's a pre-baked Docker image at `ponderosa/topping-combo-suggester`. Add the `ReplicaSet` to the cluster with `kubectl create --save-config`. 
-1. `kubectl describe` can get you more information about your `ReplicaSet`. Use it to figure out the first three events that are associated with the `ReplicaSet`. Next, use `kubectl describe` to find out who the pod is `Controlled By`.
-2. Update the ReplicaSet to have two replicas and use `kubectl apply`to update the cluster.
-3. Use `kubectl scale` to increase the replica count to 4.
-4. Use `kubectl apply` to decrease the replica count to 1.
+0. Write the manifest for a `ReplicaSet` with three identical pods that serve the `topping-suggestion` application (there's a pre-baked Docker image at `ponderosa/topping-suggestion:1.2` and a working pod spec in the `resources/` directory). Add the `ReplicaSet` to the cluster with `kubectl apply`. 
+0. `kubectl describe` can get you more information about your `ReplicaSet`. Use it to figure out the first three events that are associated with the `ReplicaSet`. Next, use `kubectl describe` to find out who the pod is `Controlled By`.
+0. Update the ReplicaSet to have two replicas and use `kubectl apply`to update the cluster. Use `kubectl get pods` and `kubectl describe rs` to evaluate the results.
+0. Use `kubectl scale` to increase the replica count to 4 and verify the results.
 
 **Useful docs:** [`ReplicaSet` overview](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/), [`ReplicaSet` docs](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.13/#replicaset-v1-apps),  [`kubectl scale`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#scale), [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply). [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe).
 
 ## Exercise 1 — Proving a `ReplicaSet` works
+
+Note: skip this if you're running in MiniKube.
 
 **Tasks:**
 
@@ -66,7 +72,7 @@ This lab assumes you have a running Kubernetes cluster and `kubectl` configured 
 **Tasks**:
 
 0. `ReplicaSet` membership is determined by pod labels. Remove a pod from the `ReplicaSet` by using `kubectl edit`. How many pods are now running in the cluster?
-1. Change the pod you removed from the `ReplicaSet` to rejoin it using `kubectl edit`. How many pods are now running in the cluster?
+0. Change the pod you removed from the `ReplicaSet` to rejoin it using `kubectl edit`. How many pods are now running in the cluster?
 
 **Useful docs:** [`kubectl edit`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#edit), 
 
@@ -75,6 +81,8 @@ This lab assumes you have a running Kubernetes cluster and `kubectl` configured 
 If you delete a `ReplicaSet`, it will also delete the pods that it manages. By using the `--cascade=false` flag, you can prevent it from doing that.
 
 0. Delete your `ReplicaSet` without deleting its constituent pods.
-1. Delete all pods in the cluster.
+0. Delete all pods in the cluster.
+
+[^0]: Note that `scale` is an [_imperative_](https://kubernetes.io/docs/concepts/overview/object-management-kubectl/overview/#imperative-commands) object management technique, while `kubectl apply -f my-cool-yaml.yaml` is a [_declarative_](https://kubernetes.io/docs/concepts/overview/object-management-kubectl/declarative-config/) object management technique. It's generally best to stick to one or the other, rather than mixing them.
 
 [^0]: You can't. It's fun to try though!

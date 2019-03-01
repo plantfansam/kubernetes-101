@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hs-pizza-frontend-2
+  labels:
+    app: hs-pizza-frontend
+spec:
+  containers:
+    - name: hs-pizza-frontend-container
+      image: ponderosa/hs-pizza-frontend:1.0
+      ports:
+        - containerPort: 5000

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: topping-suggestion-example
+  labels:
+    app: topping-suggestion
+spec:
+  containers:
+    - name: topping-suggestion-pod
+      image: ponderosa/topping-suggestion:1.2
+      ports:
+        - containerPort: 9876

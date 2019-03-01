@@ -5,9 +5,9 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: default
-    port: 80
-    targetPort: 80
-    protocol: TCP
+    - name: default
+      port: 80
+      targetPort: 5000
+      protocol: TCP
   selector:
-    app: wat
+    app: hs-pizza-frontend

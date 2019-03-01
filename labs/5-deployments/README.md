@@ -51,7 +51,7 @@ HyperscalePizza has moved their workloads from the datacenter onto Kubernetes an
 
 **Tasks:** 
 
-0. Create a `deployment` manifest that specifies 2 replicas of the `ponderosa/topping-combo-suggester-slow-startup:0.2` image and launch it into the cluster with `kubectl apply -f deployment.yaml`. Check that your pods are running with `kubectl get pods`.
+0. Create a `deployment` manifest that specifies 2 replicas of the `ponderosa/topping-suggestion-slow-startup:0.2` image and launch it into the cluster with `kubectl apply -f deployment.yaml`. Check that your pods are running with `kubectl get pods`.
 1. Create a `service` that sends traffic to the pods launched by the deployment (you can probably use the service manifest you did in [lab 3](#todo))
 2. Launch a service containing the `health-checker-app` by running `./run-health-checker.sh your-service-name` in this directory. The health checker provides diagnostic info on the `toping-combo-suggetser` service running at `your-service-name`. TODO: clean this up
 3. In one window, pull up the `pizza-health-checker` UI. In another window, update `deployment.yaml` to specify that there should be three replicas, then launch it into the cluster with `kubectl apply -f deployment.yaml` and check that you have three pods running. Watch the UI and look for 500s from the `topping-combo-sugester` service. What do you see? 
@@ -60,17 +60,17 @@ HyperscalePizza has moved their workloads from the datacenter onto Kubernetes an
 
 ## Exercise 1 — Adding a readinessProbe
 
-As you might have noticed, our service started delivering traffic to our new replica before it was ready (note that it's called `topping-combo-suggester-slow-startup`). Hungry pizza orderers are seeing errors as a result! We can fix this by setting a `readinessProbe` on our pod. A `service` will only load balance to matching pods if their `readinessProbe` shows them as ready.
+As you might have noticed, our service started delivering traffic to our new replica before it was ready (note that it's called `topping-suggestion-slow-startup`). Hungry pizza orderers are seeing errors as a result! We can fix this by setting a `readinessProbe` on our pod. A `service` will only load balance to matching pods if their `readinessProbe` shows them as ready.
 
 **Tasks**: 
 
-0. Add a `readinessProbe` to the `topping-combo-suggester-slow-startup` pod that hits the `/health-check` endpoint. Pull up your `pizza-health-checker` UI and then, in a separate window, update your `deployment` with `kubectl apply`. What do you see?
+0. Add a `readinessProbe` to the `topping-suggestion-slow-startup` pod that hits the `/health-check` endpoint. Pull up your `pizza-health-checker` UI and then, in a separate window, update your `deployment` with `kubectl apply`. What do you see?
 
 **Useful docs:** [liveness and readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/), [services](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service)
 
 ## Exercise 2 — Toggling deployment strategy
 
-The time has come to upgrade `topping-combo-suggester-slow-startup` to the hot new release, `topping-combo-suggester:0.2`. Due to their extremely complex machine learning algorithms, code running in `topping-combo-suggester-slow-startup` cannot be run concurrently with `topping-combo-suggester`, which means we need to kill all `topping-combo-suggester-slow-startup` pods before firing up the new `topping-combo-suggester:0.2` pods. 
+The time has come to upgrade `topping-suggestion-slow-startup` to the hot new release, `topping-suggestion:0.2`. Due to their extremely complex machine learning algorithms, code running in `topping-suggestion-slow-startup` cannot be run concurrently with `topping-suggestion`, which means we need to kill all `topping-suggestion-slow-startup` pods before firing up the new `topping-suggestion:0.2` pods. 
 
 0. Configure the deployment's `strategy` field to kill the old version's pods entirely before starting up the new ones.
 
@@ -79,7 +79,7 @@ The time has come to upgrade `topping-combo-suggester-slow-startup` to the hot n
 ## Followup exercises:
 
 * Undo your latest rollout using [`kubectl rollout undo`](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-to-a-previous-revision).
-* Rollout a new deployment with four replicas of `topping-combo-suggester:0.3`, making sure that there are always at least 2 pods available using the [`maxUnavailable` field](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#max-unavailable). 
+* Rollout a new deployment with four replicas of `topping-suggestion:0.3`, making sure that there are always at least 2 pods available using the [`maxUnavailable` field](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#max-unavailable). 
 * Update your manifest to deploy four replicas of `topping-comb-suggester-slow-startup:0.2` with `maxUnavailable` set to 25%. After ten seconds, [pause the deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment). View the status with `kubectl rollout status`. When you're ready, resume the deployment.
 
 
