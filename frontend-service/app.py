@@ -1,4 +1,7 @@
 import os
+import sys
+from types import SimpleNamespace
+
 import requests
 from flask import Flask, render_template
 app = Flask(__name__)
@@ -30,9 +33,12 @@ def pizza():
 def get_topping_combo_from_microservice():
     topping_combo_endpoint = os.path.join(topping_combo_suggester_root_url(),
                                           "topping_combo")
-    return requests.get(topping_combo_endpoint, timeout=1)
+    try:
+        return requests.get(topping_combo_endpoint, timeout=1)
+    except requests.exceptions.RequestException as e:
+        print(e, file=sys.stderr)
+        return SimpleNamespace(**{"status_code": "????"})
 
 
 def topping_combo_suggester_root_url():
-    return os.environ.get("TOPPING_COMBO_SUGGESTER_URL",
-                          "https://www.google.com")
+    return os.environ.get("TOPPING_COMBO_SUGGESTER_URL", "http://0.0.0.0")
