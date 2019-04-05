@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: utility
+  labels:
+    best_pasta_shape: "rigatoni"
+spec:
+  containers:
+  - name: utility
+    image: ubuntu:18.04
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]

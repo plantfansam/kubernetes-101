@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hs-pizza-frontend
+  labels:
+    app: hs-pizza-frontend
+spec:
+  containers:
+  - name: hs-pizza-frontend-container
+    image: ponderosa/hs-pizza-frontend-service:0.1
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 1234

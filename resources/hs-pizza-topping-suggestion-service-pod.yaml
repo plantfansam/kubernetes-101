@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hs-pizza-topping-suggestion
+spec:
+  containers:
+  - name: hs-pizza-topping-suggestion-container
+    image: ponderosa/topping-suggestion-service:0.1
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 5678
