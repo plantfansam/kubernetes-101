@@ -5,4 +5,5 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 ADD . /app
 
-CMD gunicorn --bind 0.0.0.0:9876 --graceful-timeout 1 --access-logfile - --error-logfile - --log-level debug wsgi:app
+ENV FLASK_APP=app.py
+CMD ["flask", "run", "-p", "5678", "-h", "0.0.0.0"]
