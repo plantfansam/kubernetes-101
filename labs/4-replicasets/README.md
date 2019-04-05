@@ -74,7 +74,7 @@ Note: skip this if you're running in MiniKube.
 0. `ReplicaSet` membership is determined by pod labels. Remove a pod from the `ReplicaSet` by using `kubectl edit`. How many pods are now running in the cluster?
 0. Change the pod you removed from the `ReplicaSet` to rejoin it using `kubectl edit`. How many pods are now running in the cluster?
 
-**Useful docs:** [`kubectl edit`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#edit), 
+**Useful docs:** [`kubectl edit`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#edit). 
 
 ## Exercise 3 — Pointing a service at the `ReplicaSet`
 

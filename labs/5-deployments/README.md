@@ -26,6 +26,8 @@ spec:
   selector:
     matchLabels:
       app: nginx
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:

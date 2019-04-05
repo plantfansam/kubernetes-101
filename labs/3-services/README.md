@@ -6,9 +6,7 @@
 >
 > — [Kubernetes docs](https://kubernetes.io/docs/concepts/services-networking/service/)
 
-When running applications on Kubernetes, HyprSk8l Pizza will need to find pods in order to route network requests to them — remember, we're not going to use `kubectl port-forward` in production. This is particularly relevant because HyprSk8l Pizza recently made the leap to [microservices](https://microservices.io/); not only do end users need to access the `hs-pizza-frontend` from the internet, `hs-pizza-frontend` needs  to talk to the `topping-suggestion-service` in order to deliver value to customers (otherwise how will people learn that anchovy pineapple is their ideal slice?). The microservice architecture looks like this:
-
-![service architecture diagram](service-architecture.png)
+When running applications on Kubernetes, HyprSk8l Pizza will need to find pods in order to route network requests to them — remember, we're not going to use `kubectl port-forward` in production. This is particularly relevant because HyprSk8l Pizza recently made the leap to [microservices](https://microservices.io/); not only do end users need to access the `hs-pizza-frontend` from the internet, `hs-pizza-frontend` needs  to talk to the `topping-suggestion-service` in order to deliver value to customers (otherwise how will people learn that anchovy pineapple is their ideal slice?).
 
 Enter Kubernetes [services](https://kubernetes.io/docs/concepts/services-networking/service/). When you create a Kubernetes service, Kubernetes provide a stable [`ClusterIP`](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types)[^0] and DNS name that distributes traffic to a defined set of pods (this is also known as ([load balancing](https://en.wikipedia.org/wiki/Load_balancing_(computing))). **Pods are included in a service by virtue of matching its configured labels.** So the following service, for example, would forward in-cluster requests to `topping-suggestion-service` to pods with the label `app`=`topping-suggestion`:
 
@@ -54,7 +52,7 @@ Let's get HyprSk8l's `frontend-python` service up and running and then we can ad
 
 **Useful docs:** [service docs](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types), [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe), [`nslookup`](https://linux.die.net/man/1/nslookup), [lab 2](https://github.com/ponderosa-io/kubernetes-101/tree/master/labs/2-kube-pods).
 
-## Exercise 1 — Creating a service with a `NodeIP`
+## Exercise 1 — Creating a service with a `NodePort`
 
 In this exercise, we will create a service that's accessible on a specific port of every node in the cluster.
 
@@ -73,7 +71,7 @@ In this exercise, we will create a service that's accessible outside the cluster
 
 **Tasks:**
 
-0. Create a manifest (`service-nodeport.yaml`) that specifies a service with the name `frontend-via-loadbalancer`. The service should forward requests on port 80 to port 5000 on a pod with the label `app=hs-pizza-frontend`. Launch the service into your cluster with `kubectl apply`.
+0. Create a manifest (`service-loadbalancer.yaml`) that specifies a service with the name `frontend-via-loadbalancer`. The service should forward requests on port 80 to port 5000 on a pod with the label `app=hs-pizza-frontend`. Launch the service into your cluster with `kubectl apply`.
 0. Go to your cloud provider's user interface and find your load balancer.
 0. Visit `your-loadbalancer.yourcloudprovider.com/pizza` in a browser and verify that a response is present.
 
@@ -86,7 +84,7 @@ In this exercise, we'll add a third pod to the `frontend` service created in exe
 **Tasks:**
 
 0. Check out the `Endpoints` associated with your `frontend-via-loadbalancer service` by using `kubectl describe`; note how many there are.
-0. Update the labels on `resources/frontend-pod-3.yaml` so that it will join your `frontend-via-loadbalancer` service. Add the pod to the cluster with `kubectl apply -f`. Note that this pod intentially contains a different image than others in its service, which is _extremly_ not recommended; we're only doing it for demonstration purposes.
+0. Update the labels on `resources/frontend-pod-3.yaml` so that it will join your `frontend-via-loadbalancer` service. Add the pod to the cluster with `kubectl apply -f`. Note that this pod intentially contains a different image than others in itopping suggestion service, which is _extremly_ not recommended; we're only doing it for demonstration purposes.
 0. Check out the `Endpoints` associated with your service again; you should see one more.
 0. Hit your service's `/pizza` endpoint repeatedly until it's obvious that the new pod has joined the service.
 

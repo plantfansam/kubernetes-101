@@ -92,7 +92,7 @@ Your Kubernetes cluster has security features that prevent anyone on the interne
 1. Delete your pod using `kubectl delete`.
 2. Update your pod to use the original `ponderosa/hs-pizza-frontend:1.0` image and run `kubectl port-forward` to serve traffic. Verify that [http//localhost:1234](http//localhost:1234) works again.
 
-**Useful docs: ** [`kubectl edit`](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-edit), [`kubectl delete`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
+**Useful docs:** [`kubectl edit`](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-edit), [`kubectl delete`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
 
 ## Exercise 3 — Executing commands inside a pod
 
