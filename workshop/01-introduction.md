@@ -35,22 +35,6 @@ The GitHub repository is laid out as follows:
 
 Both the frontend service and the topping suggestion service are [Flask](http://flask.pocoo.org/) apps — Flask is a dead simple Python web framework, which was chosen for its ease of use and understanding (as long as you know a programming language, I promise you can figure Flask out in less than 5 minutes).
 
-To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on.
+To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. Before doing this, you'll likely need to run `pip install -r requirements.txt`, which will install the application's requirement on your machine.
 
 Note: the frontend service expects a `COMBO_SUGGESTER_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on localhost:2222, you would want to run `COMBO_SUGGESTER_URL=http://localhost:2222 flask app`.
-
-## Workshop outline
-
-* [01-introduction](#)
-* [02-containerization](02-containerization.md)
-* [03-clusters](03-clusters.md)
-* [04-pods-and-labels](04-pods-and-labels.md)
-* [05-services](05-services.md)
-* [06-replicasets](06-replicasets.md)
-* [07-deployments](07-deployments.md)
-* [08-configmaps](08-configmaps.md)
-* [09-secrets](09-secrets.md)
-* [10-volumes](10-volumes.md)
-* [11-statefulsets](11-statefulsets.md)
-* [12-jobs](12-jobs.md)
-* [13-resources](13-resources.md)
