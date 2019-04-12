@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  {% include header.html %}
+  {% include scripts.html %}
+  <body>
+    {% include navbar.html %} 
+    <div class="section">
+        <div class="container">
+            <div class="tile is-ancestor">
+                {% include sidebar.html %}
+                <div class="tile is-10">
+                    <article class="content">
+                        {{ content }}
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

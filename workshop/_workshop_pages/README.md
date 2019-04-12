@@ -1,0 +1,15 @@
+# Workshop outline
+
+* [01-introduction](#01-introduction.md)
+* [02-containerization](02-containerization.md)
+* [03-clusters](03-clusters.md)
+* [04-pods-and-labels](04-pods-and-labels.md)
+* [05-services](05-services.md)
+* [06-replicasets](06-replicasets.md)
+* [07-deployments](07-deployments.md)
+* [08-configmaps](08-configmaps.md)
+* [09-secrets](09-secrets.md)
+* [10-volumes](10-volumes.md)
+* [11-statefulsets](11-statefulsets.md)
+* [12-jobs](12-jobs.md)
+* [13-resources](13-resources.md)

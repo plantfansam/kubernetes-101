@@ -5,3 +5,5 @@ frontend/node_modules/*
 *.vscode
 *.pyc
 .ponderosa/
+workshop/.sass-cache/
+workshop/_site/

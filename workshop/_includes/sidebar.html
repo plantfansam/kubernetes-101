@@ -1,0 +1,15 @@
+<div class="tile is-2 is-parent is-vertical">
+    <div class="tile is-child">
+        <aside class="menu is-hidden-mobile has-shadow">
+            <p class="menu-label">
+                Modules
+            </p>
+
+            <ul class="menu-list" id="menu">
+                {% for page in site.workshop_pages %}
+                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </aside>
+    </div>
+</div>

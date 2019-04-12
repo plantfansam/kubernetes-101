@@ -1,0 +1,27 @@
+@font-face {
+  font-family: "studio-pro";
+  src: url("../fonts/StudioPro-Regular.woff2");
+}
+
+$background-tan: #FEF8EF;
+$orange: #F27115;
+$black: #1d1d1d;
+$blue: #2A66c1;
+$green: #00B969;
+$brown: #C79C55;
+$ponderosa-green: #32916C;
+$pink: #FA3EFF;
+$brown: #A06B4D;
+$yellow: #FCFE30;
+$kubecamp-brown: #CE9B46;
+$ponderosa-purple: #545D93;
+$light-red: #FFBCBC; /* Syllabus divider */
+$light-grey: #E1E3E8;
+$light-green: #D3FFB2;
+$kubernetes: $green;
+$docker: $blue;
+
+$family-sans-serif: "studio-pro";
+$primary: $ponderosa-green;
+.navbar {
+}

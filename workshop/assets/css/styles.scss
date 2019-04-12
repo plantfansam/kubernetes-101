@@ -1,0 +1,33 @@
+---
+# this ensures Jekyll reads the file to be transformed into CSS later
+# only Main files contain this front matter, not partials.
+---
+
+@import 'variables';
+@import 'bulma';
+
+.tile.is-10 {
+    padding: 1em;
+}
+a.navbar-item:hover, .navbar-link:hover {
+    color: black;
+}
+
+aside {
+    margin-top: 1rem;
+    border-right: 1px dashed $light-grey;
+}
+#ponderosa_svg {
+    width: 6rem;
+    transform: rotate(-15deg);
+    float: left;
+    display: inline-block;
+}
+
+#email_signup_content {
+    margin-top: 1rem;
+}
+
+#in_progress {
+    display: none;
+}

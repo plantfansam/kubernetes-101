@@ -1,0 +1,12 @@
+title: Kubernetes 101
+sass:
+  style: compressed
+  sass_dir: _sass
+plugins:
+  - jekyll-paginate-v2
+github_url: "https://github.com/ponderosa-io/kubernetes-101"
+collections:
+  workshop_pages:
+    output: true
+    permalink: :title
+    _hide_content: false
