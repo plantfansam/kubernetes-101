@@ -28,16 +28,16 @@ Here's an admittedly crude service diagram:
 
 The GitHub repository is laid out as follows:
 
-* `/workshop` — contains Markdown documents guiding participants through the workshop
+* `/workshop` — contains Jekyll site guiding participants through the workshop
 * `/frontend-service` — contains a Flask app that runs the frontend service
 * `/topping-suggestion-service` — contains a Flask app that runs the topping suggestion service
-* `/resources` — contains files used in the workshop
+* `/resources` — contains useful files invoked in the workshop
 * `/k8s` — an empty directory that we suggest putting Kubernetes manifests in (this is just a suggestion and is not required by Kubernetes).
 
 ### How to run the applications
 
 Both the frontend service and the topping suggestion service are [Flask](http://flask.pocoo.org/) apps — Flask is a dead simple Python web framework, which was chosen for its ease of use and understanding (as long as you know a programming language, I promise you can figure Flask out in less than 5 minutes).
 
-To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. Before doing this, you'll likely need to run `pip install -r requirements.txt`, which will install the application's requirement on your machine.
+To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. Before doing this, you'll likely need to run `pip install -r requirements.txt`, which will install the application's requirements on your machine.
 
-Note: the frontend service expects a `COMBO_SUGGESTER_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on localhost:2222, you would want to run `COMBO_SUGGESTER_URL=http://localhost:2222 flask app`.
+Note: the frontend service expects a `COMBO_SUGGESTER_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on `localhost:2222`, you would want to run `COMBO_SUGGESTER_URL=http://localhost:2222 flask app`.

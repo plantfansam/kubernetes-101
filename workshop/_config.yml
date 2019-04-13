@@ -5,6 +5,8 @@ sass:
 plugins:
   - jekyll-paginate-v2
 github_url: "https://github.com/ponderosa-io/kubernetes-101"
+baseurl: "/kubernetes-101-workshop"
+url: "https://ponderosa.io"
 collections:
   workshop_pages:
     output: true
