@@ -6,7 +6,7 @@ spec:
   ports:
     - name: default
       port: 80
-      targetPort: 5000
+      targetPort: 1234
       protocol: TCP
   selector:
     app: health-checker

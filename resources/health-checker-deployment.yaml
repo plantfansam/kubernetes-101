@@ -18,11 +18,11 @@ spec:
     spec:
       containers:
         - name: health-checker-pod
-          image: ponderosa/intellipod:0.3
+          image: ponderosa/hs-pizza-health-checker-service:latest
           ports:
             - containerPort: 5000
           env:
             - name: TOPPING_SUGGESTION_URL
-              value: http://topping-suggestion
+              value: http://topping-suggestion-service
             - name: FRONTEND_URL
               value: http://frontend
