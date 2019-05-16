@@ -5,9 +5,6 @@ title: "Containerization"
 
 HyprSk8l Pizza has decided to take their application onto Kubernetes, which means that we first need to **containerize** our application. Docker is a popular [containerization](https://en.wikipedia.org/wiki/Container_(virtualization)) technology, and Docker **containers** are typically what Kubernetes deploys. In this section, we'll prepare our app for deployment on Kubernetes by containerizing our frontend service and our topping suggestion service. 
 
-> If you'd like more in-depth background on the topics covered here, check out our [video course](UDEMY_URL)
-{: class="video-plug"}
-
 ## Containerizing our Services
 
 ### Writing the frontend-service Dockerfile

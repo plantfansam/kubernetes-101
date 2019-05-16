@@ -37,6 +37,9 @@ def get_toppings():
 
 def to_sentence(topping_list):
     return_string = ""
+    if os.environ.get("TOPPING_MODE", "").upper() == "SPICY":
+        return_string += "🌶️🌶️🌶️ WILDLY SPICY "
+
     for index, topping in enumerate(topping_list):
         if index == len(topping_list) - 1:
             return_string += f"and {topping}"

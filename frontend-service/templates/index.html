@@ -16,40 +16,81 @@
                 <h1 class="title">
                     HyprSk8l Pizza 🍕
                 </h1>
-                <h2 class="subtitle">
-                    Would you like to invest?
-                </h2>
             </div>
         </div>
     </section>
     {% if errors %}
     <section class="section">
-        <div class="notification is-warning">
-            <h2><strong>Errors</strong></h2>
-            <ul>
-                {% for error in errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </section>
-    {% endif %}
-    {% if topping_combo %}
-    <section>
-        <div class="card">
-            <header class="card-header">
-                <p class="card-header-title">
-                    Pizza combo
-                </p>
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    {{ topping_combo }}
-                </div>
+        <div class="container">
+            <div class="notification is-warning">
+                <h2><strong>Errors</strong></h2>
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </section>
     {% endif %}
+    <section>
+        <div class="container">
+            <div class="tile is-ancestor">
+                {% if topping_combo %}
+                <div class="tile is-4">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Pizza combo
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                {{ topping_combo }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="tile is-4">
+                    <div class="card is-4">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Look at this delicious pizza
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                {% if show_pizza %}
+                                    <img src="static/pizza.jpg">
+                                {% else %}
+                                    Set <code>SHOW_PIZZA=true</code> to reveal mouthwatering photo
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-4">
+                    <div class="card is-4">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Top secret pizza:
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="content">
+                                {% if show_secret_pizza %}
+                                    <img src="static/secret-pizza.png">
+                                {% else %}
+                                    APPLICATION NOT AUTHORIZED TO VIEW TOP SECRET PIZZA
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

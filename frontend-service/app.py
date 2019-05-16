@@ -6,6 +6,8 @@ import requests
 from flask import Flask, render_template
 app = Flask(__name__)
 
+SECRET_PIZZA_PASSWORD = "pizzarules"
+
 
 @app.route("/")
 def root():
@@ -22,7 +24,16 @@ def root():
                        """
         errors = [combo_error]
     return render_template(
-        "index.html", topping_combo=topping_combo, errors=errors)
+        "index.html",
+        topping_combo=topping_combo,
+        errors=errors,
+        show_pizza=os.environ.get("SHOW_PIZZA", False),
+        show_secret_pizza=pizza_password_correct())
+
+
+@app.route("/health-check")
+def health_check():
+    return "True"
 
 
 @app.route("/pizza")
@@ -65,4 +76,8 @@ def get_topping_combo_from_microservice():
 
 def topping_combo_suggester_root_url():
     return os.environ.get("TOPPING_COMBO_SUGGESTER_URL",
-                          "http://topping-suggestion-service:5678")
+                          "http://topping-suggestion-service")
+
+
+def pizza_password_correct():
+    return os.environ.get("SECRET_PIZZA_PASSWORD", "") == SECRET_PIZZA_PASSWORD
