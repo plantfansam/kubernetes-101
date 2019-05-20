@@ -3,7 +3,7 @@ import sys
 from types import SimpleNamespace
 
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 SECRET_PIZZA_PASSWORD = "pizzarules"
@@ -58,6 +58,12 @@ def ls_tmp():
     return_string = (f"Listing files in /tmp on HOSTNAME {pod_hostname}:\n"
                      f"{listing}\n")
     return return_string
+
+
+@app.route("/extremely-expensive-operation")
+def extremely_expensive_operation():
+    exponent = int(request.args.get("pizza_exponent") or 0)
+    return f"2 raised to the power of {exponent} gives you ... {2**exponent} pizzas. That's a lot of pizza."
 
 
 def hostname():

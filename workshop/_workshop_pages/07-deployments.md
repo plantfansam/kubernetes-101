@@ -304,7 +304,7 @@ Now that you have the basic principles of deployments down, you may want to chec
 
 ## Exercise: create a deployment for the topping suggestion service
 
-Now that you know how to create a deployment and point a service towards the pods it spins up, go ahead and create a deployment that is responsible for the topping-suggestion application, along with a service named `topping-suggestion-service` to get traffic to it. When you're done, your health checker UI should show both applications as healthy. The Docker image you want to use is `ponderosa/topping-suggestion-service:0.1`, which serves traffic on port `5678`. 
+Now that you know how to create a deployment and point a service towards the pods it spins up, go ahead and create a deployment that is responsible for the topping-suggestion application, along with a service named `topping-suggestion-service` to get traffic to it. When you're done, your health checker UI should show both applications as healthy. The Docker image you want to use is `ponderosa/hs-pizza-topping-suggestion-service:0.1`, which serves traffic on port `5678`. 
 
 When you've successfully created the `topping-suggestion-service`, your application should be working properly, and look like so:
 
