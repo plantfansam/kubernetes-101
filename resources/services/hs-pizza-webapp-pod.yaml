@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hs-pizza-webapp
+  labels:
+    best_pasta_shape: penne
+  annotations:
+    best_pizza_topping: basil
+spec:
+  containers:
+  - name: hs-pizza-webapp-container
+    image: ponderosa/hs-pizza-webapp:latest
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 1234

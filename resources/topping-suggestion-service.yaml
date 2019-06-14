@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: topping-suggestion-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: default
       port: 80
-      targetPort: 1234
+      targetPort: 5678
       protocol: TCP
   selector:
-    app: hs-pizza-frontend
+    app: hs-pizza-topping-suggestion

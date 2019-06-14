@@ -5,11 +5,11 @@ title: "Kubernetes Jobs"
 
 ## What are Kubernetes Jobs and why might you use them?
 
-While web applications like HyprSk8l Pizza typically need to run 24/7/365, other software is designed to run to completion. Think of data processing workloads, database migrations, etc. Kubernetes offers a first-class way of running these workloads: the `Job`. In a `Job` specification, you declare a container image, a command to run inside that container image, and a few other parameters (such as how many times the job should retry if it fails).
+While web applications like HyperScale Pizza typically need to run 24/7/365, other software is designed to run to completion. Think of data processing workloads, database migrations, etc. Kubernetes offers a first-class way of running these workloads: the `Job`. In a `Job` specification, you declare a container image, a command to run inside that container image, and a few other parameters (such as how many times the job should retry if it fails).
 
 ## Creating a Kubernetes job
 
-HyprSk8l Pizza is working on a killer feature in which a job logs out a topping suggestion surrounded by a bunch of pizza emojis (despite the fact that logs are only visible to engineers, customers are clambering for it!). The code for the job lives inside the `topping-suggestion-service` codebase at `jobs/log_out_pizza_emojis.py`, and it can be invoked with `python topping-suggestion-service/jobs/log_out_pizza_emojis.py`.
+HyperScale Pizza is working on a killer feature in which a job logs out a topping suggestion surrounded by a bunch of pizza emojis (despite the fact that logs are only visible to engineers, customers are clambering for it!). The code for the job lives inside the `topping-suggestion-service` codebase at `jobs/log_out_pizza_emojis.py`, and it can be invoked with `python topping-suggestion-service/jobs/log_out_pizza_emojis.py`.
 
 Let's create a Kubernetes job to run this python script. The manifest will look like this:
 
@@ -23,13 +23,13 @@ spec:
     spec:
       containers:
       - name: topping-combo-suggestion
-        image: ponderosa/hs-pizza-topping-suggestion-service:latest 
+        image: ponderosa/hs-pizza-topping-suggestion:latest 
         command: ["python", "jobs/log_out_pizza_emojis.py"]
       restartPolicy: Never
   backoffLimit: 0
 ```
 
-We're telling Kubernetes that we want to run `python jobs/log_out_pizza_emojis.py` inside of the `ponderosa/hs-pizza-topping-suggestion-service:latest` Docker image. The innermost `spec` here defines the Pod in which our command will run, just like in a `ReplicaSet`.
+We're telling Kubernetes that we want to run `python jobs/log_out_pizza_emojis.py` inside of the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The innermost `spec` here defines the Pod in which our command will run, just like in a replicaSet.
 
 Save this manifest in `k8s/emoji-job.yaml` and run `kubectl apply -f k8s/emoji-job.yaml`. You'll see something like this:
 
@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
       - name: topping-combo-suggestion
-        image: ponderosa/hs-pizza-topping-suggestion-service:latest 
+        image: ponderosa/hs-pizza-topping-suggestion:latest 
         command: ["python", "jobs/log_out_pizza_emojis.py"]
       restartPolicy: Never
   backoffLimit: 0
@@ -142,7 +142,7 @@ spec:
     spec:
       containers:
       - name: topping-combo-suggestion
-        image: ponderosa/hs-pizza-topping-suggestion-service:latest 
+        image: ponderosa/hs-pizza-topping-suggestion:latest 
         command: ["/bin/bash", "-c", "echo 'exiting with errror' && exit 1"]
       restartPolicy: Never
   backoffLimit: 0
@@ -175,7 +175,7 @@ spec:
     spec:
       containers:
       - name: topping-combo-suggestion
-        image: ponderosa/hs-pizza-topping-suggestion-service:latest 
+        image: ponderosa/hs-pizza-topping-suggestion:latest 
         command: ["/bin/bash", "-c", "echo 'exiting with errror' && exit 1"]
       restartPolicy: Never
   backoffLimit: 3
@@ -244,7 +244,7 @@ $
 
 First, delete the remaining jobs in the cluster with `kubectl create job`.
 
-Once you've done that, write a job manifest that runs the script `jobs/log_out_forest.py`, which is present in the `ponderosa/hs-pizza-topping-suggestion-service:latest` Docker image. The script is invoked as follows:
+Once you've done that, write a job manifest that runs the script `jobs/log_out_forest.py`, which is present in the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The script is invoked as follows:
 
 `python jobs/log_out_meal.py lunch`
 `python jobs/log_out_meal.py dinner`

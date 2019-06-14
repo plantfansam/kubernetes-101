@@ -3,7 +3,7 @@ layout: workshop-page
 title: "Resource requests and limits in Kubernetes"
 ---
 
-After moving its application to Kubernetes, HyprSk8l Pizza is seeing sporadic performance issues. Some investigation reveals that these issues are correlated with the `/extremely-expensive-operation` endpoint in the `topping-suggestion-service` application. It turns out that when this endpoint is hit, the pod running the application starts hogging RAM to the point that other requests are slowed down. Shocking! I can't believe it was that endpoint...
+After moving itopping suggestion servicelication to Kubernetes, HyperScale Pizza is seeing sporadic performance issues. Some investigation reveals that these issues are correlated with the `/extremely-expensive-operation` endpoint in the `topping-suggestion-service` application. It turns out that when this endpoint is hit, the pod running the application starts hogging RAM to the point that other requests are slowed down. Shocking! I can't believe it was that endpoint...
 
 ## Limiting resource usage
 
@@ -48,9 +48,9 @@ This explains a lot! Our application is raising two to the eight billionth power
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-service-deployment
+  name: webapp-service-deployment
   labels:
-    app: hs-pizza-frontend
+    app: hs-pizza-webapp
     workshop: kubernetes-101
 spec:
   replicas: 2
@@ -58,17 +58,17 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: hs-pizza-frontend
+      app: hs-pizza-webapp
       workshop: kubernetes-101
   template:
     metadata:
       labels:
-        app: hs-pizza-frontend
+        app: hs-pizza-webapp
         workshop: kubernetes-101
     spec:
       containers:
-      - name: hs-pizza-frontend-container
-        image: ponderosa/hs-pizza-frontend-service:latest
+      - name: hs-pizza-webapp-container
+        image: ponderosa/hs-pizza-webapp:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 1234
@@ -80,12 +80,12 @@ spec:
           - name: SHOW_PIZZA
             valueFrom:
               configMapKeyRef:
-                name: frontend-configmap
+                name: webapp-configmap
                 key: SHOW_PIZZA
           - name: SECRET_PIZZA_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: frontend 
+                name: webapp 
                 key: SECRET_PIZZA_PASSWORD
         resources:
           requests:

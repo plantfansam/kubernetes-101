@@ -44,10 +44,10 @@ def pizza():
 @app.route("/pod_info")
 def pod_info():
     pod_hostname = hostname()
-    return_string = (f"Greetings from HOSTNAME {pod_hostname}!\n"
-                     f"Access this pod with kubectl exec -it {pod_hostname}\n"
-                     f"Get logs with kubectl logs {pod_hostname}\n"
-                     "Get a slice of pizza at /pizza\n")
+    return_string = (f"Greetings from HOSTNAME {pod_hostname}!.  "
+                     f"Access this pod with kubectl exec -it {pod_hostname}.  "
+                     f"Get logs with kubectl logs {pod_hostname}.  "
+                     "Get a slice of pizza at /pizza.  ")
     return return_string
 
 
@@ -81,7 +81,7 @@ def get_topping_combo_from_microservice():
 
 
 def topping_combo_suggester_root_url():
-    return os.environ.get("TOPPING_COMBO_SUGGESTER_URL",
+    return os.environ.get("TOPPING_COMBO_SUGGESTION_SERVICE_URL",
                           "http://topping-suggestion-service")
 
 

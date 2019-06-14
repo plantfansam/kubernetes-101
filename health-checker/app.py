@@ -17,7 +17,7 @@ def root():
         topping_suggestion_health_check_endpoint(),
         "topping-suggestion service")
     frontend_status = get_endpoint_health(frontend_health_check_endpoint(),
-                                          "frontend service")
+                                          "webapp service")
     return render_template(
         "index.html",
         env=env,
@@ -38,12 +38,12 @@ def topping_suggestion_root_url():
 
 
 def frontend_root_url():
-    return os.environ.get("FRONTEND_URL")
+    return os.environ.get("WEBAPP_URL")
 
 
 def css_class_for_status(status):
     if status == 200:
-        return "has-backgorund-success"
+        return "has-background-success"
     else:
         return "has-background-danger"
 

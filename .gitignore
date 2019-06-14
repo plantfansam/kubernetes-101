@@ -1,4 +1,3 @@
-frontend/node_modules/*
 *.terraform
 *.tfstate
 *.tfstate.backup
@@ -7,3 +6,4 @@ frontend/node_modules/*
 .ponderosa/
 workshop/.sass-cache/
 workshop/_site/
+k8s-working/

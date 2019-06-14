@@ -3,9 +3,24 @@ layout: workshop-page
 title: "Kubernetes Clusters"
 ---
 
-Now that we've containerized HyprSk8l Pizza's services, it's time to move onto Kubernetes! In order to put a workload onto Kubernetes, we'll first need to have a Kubernetes installation, which is known as a "cluster" (a "cluster" because the installation is frequently on more than one machine). You can think of a cluster as an independent instance of Kubernetes. In the future, HyprSk8l's engineering organization may need several clusters, but for now, we'll just have one. 
+Now that we've containerized HyperScale Pizza's services, we have to figure out how to run these containers in Kubernetes.
 
-## Kubernetes cluster overview
+## What even is Kubernetes
+
+As mentioned in [the containerization module]({{ site.baseurl }}/containerization), container images can be run anywhere that there is a container runtime (e.g. you can run Docker images anywhere Docker is installed). This offers a ton of possibilities: imagine that — like HyperScale Pizza — you're serving tens of thousands of requests per minute and you want to run 30 copies of the same container image, which is trivial to do (since they can run anywhere). Once you get into this territory, though, you need to think about how many resources each container needs, keep track of all of your servers that _can_ run containers, forward web traffic to those containers, restart containers when they fail, and so on and so forth. 
+
+Container orchestration software like Kubernetes (attempts to) solve these problems. 
+
+With this background, the [official Kubernetes blurb](https://kubernetes.io/) makes more sense:
+
+> Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.
+
+
+## What's a Kubernetes cluster and how do you use one?
+
+In order to put a workload onto Kubernetes, you a copy of Kubernetes installed somewhere. Because a Kubernetes installation often spans more than one host, this installation is typically referred to as a cluster. This clusterability of Kubernetes is very useful for scaling purposes — if you need to run more workloads than your cluster can currently handle, you can add compute capacity by simply adding more machines to the cluster — they do not need to be configured with anything besides the basic Kubernetes softwares. 
+
+### Interacting with a cluster
 
 At its core, the Kubernetes workflow goes like this: you tell the Kubernetes cluster that you want it to run an app with certain parameters (a Docker image, a specific command to run in that Docker image, networking information about how different containers can find one another, and so on). Here's an admittedly crude depiction:
 
@@ -29,15 +44,19 @@ The cluster control plane maintains knowledge of the state of the cluster using 
 
 The worker nodes, as you might imagine, are doing work! There's a few components to that. First, there is the **kubelet**. The Kubelet is a Kubernetes agent that runs on every node (which, in fact, is a node by virtue of it running the kubelet!). The worker nodes do work by running containers on their **container runtime**. This container runtime can be Docker, containerd, cri-o, or anything else that implements the Kubernetes Container Runtime Interface. Finally, the **Kube proxy** runs on every worker node to help workloads find and connect to one another.
 
-**Useful docs**:
-
 ## Setting up a cluster
 
-If you're a [Ponderosa](https://ponderosa.io) workshop participant, you should already have a Kubernetes cluster set up for you — talk to your instructor if you don't. If you're doing this outside of a workshop, you can create a cluster on whichever cloud provider you want, or use [Minikube](https://kubernetes.io/docs/setup/minikube/), which lets you run a one-node Kubernetes cluster on your local machine. For instructions on creating a cluster on [Digital Ocean](https://www.digitalocean.com/) (they offer a free $100 credit for new users), check out our blog post [here](https://ponderosa.io/blog/kubernetes/2019/03/13/terraform-cluster-create/).
+> Note that running a Kubernetes cluster on Digital Ocean or any other cloud provider will cost money! Often they have free getting started credits, and you can destroy your cluster once you're done.
+{: class=alert }
+
+If you're doing this outside of a [Ponderosa training](https://ponderosa.io/corporate_training) training, you can create a cluster on whichever cloud provider you want, or use [Minikube](https://kubernetes.io/docs/setup/minikube/), which lets you run a one-node Kubernetes cluster on your local machine. For instructions on creating a cluster on [Digital Ocean](https://www.digitalocean.com/) (they offer a free $100 credit for new users), check out our blog post [here](https://ponderosa.io/blog/kubernetes/2019/03/13/terraform-cluster-create/).
 
 ## Installing Kubectl
 
-Operators issue commands to the Kubernetes cluster using its HTTP API, frequently through the [`kubectl`](https://kubernetes.io/docs/reference/kubectl/overview/) command line utility. In order to use `kubectl`, you must [install it](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [configure it to look at your cluster](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/) — this is done by placing a configuration file wherever your `KUBECONFIG` environment variable points to (`~/.kube/config` by default). If you're a [Ponderosa](https://ponderosa.io) workshop participant, you should already have access to this file. If you just set up your cluster on Digital Ocean, you can use the [`/kubeconfig`](https://developers.digitalocean.com/documentation/v2/#retrieve-the-kubeconfig-for-a-kubernetes-cluster) endpoint to get your configuration file:
+Operators issue commands to the Kubernetes cluster using its HTTP API, frequently through the [`kubectl`](https://kubernetes.io/docs/reference/kubectl/overview/) command line utility. In order to use `kubectl`, you must [install it](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [configure it to look at your cluster](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/) — this is done by placing a configuration file wherever your `KUBECONFIG` environment variable points to (`~/.kube/config` by default). The details of this will vary based on what type of cluster you're using:
+
+* If you're a [Ponderosa workshop](https://ponderosa.io/corporate_training) participant, you should already have access to this file.
+* If you just set up your cluster on Digital Ocean, you can use the [`/kubeconfig`](https://developers.digitalocean.com/documentation/v2/#retrieve-the-kubeconfig-for-a-kubernetes-cluster) endpoint to get your configuration file:
 
 ```bash
 curl -X GET -H "Content-Type: application/json" \
@@ -45,8 +64,7 @@ curl -X GET -H "Content-Type: application/json" \
     "https://api.digitalocean.com/v2/kubernetes/clusters/mycoolclusterid/kubeconfig" \
     > ~/.kube/config)
 ```
-
-**Useful docs:** [access a cluster](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/), [configure access to multiple clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/), [kubectl cluster-info](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cluster-info).
+* If you're using Minikube, your `KUBECONFIG` should be automatically populated.
 
 ## Exploring kubectl and the cluster
 
@@ -54,14 +72,16 @@ Once you have `kubectl` configured you can do a lot of cool stuff, like figuring
 
 ### `kubectl` get
 
-`kubectl get` is used to explore different Kubernetes *objects*, such as [pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/), [jobs](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/), [nodes](https://kubernetes.io/docs/concepts/architecture/nodes/), and [namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/). You list all of the resources in your currently configured namespace with the command `kubectl get <resourcename>`. Try running `kubectl get nodes` to see all the nodes in your cluster.
+`kubectl get` is used to explore different Kubernetes *objects*, such as [pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/), [jobs](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/), [nodes](https://kubernetes.io/docs/concepts/architecture/nodes/), and [namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/). You can list all of the resources in your currently configured namespace with the command `kubectl get <resourcename>`. Try running `kubectl get nodes` to see all the nodes in your cluster.
 
 ### `kubectl describe`
 
-While `kubectl get` can give you good information about different objects in your cluster, you sometimes want more information. `kubectl describe` is great for that. To get more information about the `foobar` pod, for example, you might run `kubectl describe pod foobar`, where `foobar` is a unique identifier for the `pod`. The formula for `kubectl describe` is, generally speaking `kubectl describe object-type object-identifier`. So to check out details of your node with name minikube, you'd run `kubectl describe node minikube`.
+While `kubectl get` can give you good information about different objects in your cluster, you sometimes want more information. `kubectl describe` is great for that. To get more information about the `foobar` pod, for example, you might run `kubectl describe pod foobar`, where `foobar` is a unique identifier for the `pod`. The formula for `kubectl describe` is, generally speaking `kubectl describe object-type object-identifier`. So to check out details of your node with the name minikube, you'd run `kubectl describe node minikube`.
 
 ### Getting help
 
 `kubectl --help` gets you top-level information on various `kubectl` subcommands (like `kubectl get`; `get` is the "subcommand" here). For more information on a subcommand, run `--help` against the subcommand (e.g. `kubectl get --help`).
 
 You can also use `kubectl explain` to get more information about different concepts — try running `kubectl explain service`.
+
+**Useful docs:** [access a cluster](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/), [configure access to multiple clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/), [kubectl cluster-info](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cluster-info).

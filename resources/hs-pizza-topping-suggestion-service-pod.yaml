@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: hs-pizza-topping-suggestion-container
-    image: ponderosa/hs-pizza-topping-suggestion-service:0.1
+    image: ponderosa/hs-pizza-topping-suggestion:latest
     imagePullPolicy: Always
     ports:
     - containerPort: 5678

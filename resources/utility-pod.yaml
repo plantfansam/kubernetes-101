@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
   - name: utility
-    image: ubuntu:18.04
+    image: ponderosa/hs-pizza-health-checker
     command: [ "/bin/bash", "-c", "--" ]
     args: [ "while true; do sleep 30; done;" ]
