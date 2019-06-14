@@ -5,13 +5,13 @@ title: "Kubernetes Jobs"
 
 ## What are Kubernetes Jobs and why might you use them?
 
-While web applications like HyperScale Pizza typically need to run 24/7/365, other software is designed to run to completion. Think of data processing workloads, database migrations, etc. Kubernetes offers a first-class way of running these workloads: the `Job`. In a `Job` specification, you declare a container image, a command to run inside that container image, and a few other parameters (such as how many times the job should retry if it fails).
+While web applications like HyperScale Pizza typically need to run 24/7/365, other software is designed to run a fixed set of operations to completion. Think of data processing workloads, database migrations, data exports, etc. Kubernetes offers a first-class way of running these workloads: the job. In a job specification, you declare a container image, a command to run inside that container image, and a few other parameters (such as how many times the job should retry if it fails).
 
 ## Creating a Kubernetes job
 
-HyperScale Pizza is working on a killer feature in which a job logs out a topping suggestion surrounded by a bunch of pizza emojis (despite the fact that logs are only visible to engineers, customers are clambering for it!). The code for the job lives inside the `topping-suggestion-service` codebase at `jobs/log_out_pizza_emojis.py`, and it can be invoked with `python topping-suggestion-service/jobs/log_out_pizza_emojis.py`.
+HyperScale Pizza is working on a killer feature in which a job logs out a topping suggestion surrounded by a bunch of pizza emojis (despite the fact that logs are only visible to engineers, customers are clambering for it!). The code for the job has already been written and can be viewed at `topping-suggesion/jobs/log_out_pizza_emojis.py`; it can be invoked with `python topping-suggestion-service/jobs/log_out_pizza_emojis.py`. All that's left is to deploy it on Kubernetes.
 
-Let's create a Kubernetes job to run this python script. The manifest will look like this:
+Let's create a Kubernetes job to run this Python script. The manifest will look like this:
 
 ```
 apiVersion: batch/v1
@@ -29,7 +29,7 @@ spec:
   backoffLimit: 0
 ```
 
-We're telling Kubernetes that we want to run `python jobs/log_out_pizza_emojis.py` inside of the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The innermost `spec` here defines the Pod in which our command will run, just like in a replicaSet.
+We're telling Kubernetes that we want to run `python jobs/log_out_pizza_emojis.py` inside of the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The innermost `spec` here defines the pod in which our command will run, just like in a replicaSet.
 
 Save this manifest in `k8s/emoji-job.yaml` and run `kubectl apply -f k8s/emoji-job.yaml`. You'll see something like this:
 
@@ -45,7 +45,7 @@ $ kubectl get pods | grep pizza-emoji-job
 hs-pizza-log-out-pizza-emoji-job-q6zks           0/1     Completed   0          100s
 ```
 
-This is because a job doesn't do any work itself — it launches _pods_ to do work for them. So to view the results of our job, we can get the logs of that pod with `kubectl logs hs-pizza-log-out-pizza-emoji-job-q6zks`:
+This is because a job doesn't do any work itself — it launches _pods_ to do work for them. So to view the output of our job, we can get the logs of that pod with `kubectl logs hs-pizza-log-out-pizza-emoji-job-q6zks`:
 
 ```
 🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕
@@ -75,7 +75,7 @@ Kubernetes jobs keep track of how many _completions_ they have — by default a 
 
 You can also configure a job to run to completion more than once, and control how many copies of that job can be run simultaneously (a parameter known as `parallelism`).
 
-Let's run our pod 20 times with 5 pods running at any given time:
+Let's configure our job to run 20 times and allow 5 pods to run at any given time:
 
 ```
 apiVersion: batch/v1
@@ -130,7 +130,7 @@ hs-pizza-log-out-pizza-emoji-job-parallel   20/20         10s        17h
 
 ## Backoff limits
 
-Much like even the best software engineers and DevOps professionals, jobs sometimes fail. The Kubernetes `job` resource allows you to specify how many times the job should attempt to run before giving up altogether. Let's create a new job template at `k8s/failing-job.yaml` that looks like this:
+Like even the best software engineers and DevOps professionals, jobs sometimes fail. The Kubernetes `job` resource allows you to specify how many times the job should attempt to run before giving up altogether. Let's create a new job template at `k8s/failing-job.yaml` that looks like this:
 
 ```
 apiVersion: batch/v1
@@ -143,7 +143,7 @@ spec:
       containers:
       - name: topping-combo-suggestion
         image: ponderosa/hs-pizza-topping-suggestion:latest 
-        command: ["/bin/bash", "-c", "echo 'exiting with errror' && exit 1"]
+        command: ["/bin/bash", "-c", "echo 'exiting with error' && exit 1"]
       restartPolicy: Never
   backoffLimit: 0
 ```
@@ -176,7 +176,7 @@ spec:
       containers:
       - name: topping-combo-suggestion
         image: ponderosa/hs-pizza-topping-suggestion:latest 
-        command: ["/bin/bash", "-c", "echo 'exiting with errror' && exit 1"]
+        command: ["/bin/bash", "-c", "echo 'exiting with error' && exit 1"]
       restartPolicy: Never
   backoffLimit: 3
 ```
@@ -242,9 +242,9 @@ $
 
 ## Exercise: writing a job manifest
 
-First, delete the remaining jobs in the cluster with `kubectl create job`.
+First, delete the remaining jobs in the cluster with `kubectl delete job --all`.
 
-Once you've done that, write a job manifest that runs the script `jobs/log_out_forest.py`, which is present in the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The script is invoked as follows:
+Once you've done that, write a job manifest that runs the script `jobs/log_out_meal.py`, which is present in the `ponderosa/hs-pizza-topping-suggestion:latest` Docker image. The script is invoked as follows:
 
 `python jobs/log_out_meal.py lunch`
 `python jobs/log_out_meal.py dinner`
