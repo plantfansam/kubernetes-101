@@ -93,7 +93,7 @@ Events:
   Warning  Failed     56s (x3 over 96s)  kubelet, worker-pool-x76v  Failed to pull image "ponderosa/hs-pizza-webappeee:latest": rpc error: code = Unknown desc = Error response from daemon: pull access denied for ponderosa/hs-pizza-webappeee, repository does not exist or may require 'docker login'
 ``` 
 
-Once you're sufficiently satisfied that your pod is broken, you can delete your pod with `kubectl delete hs-pizza-webapp`.
+Once you're sufficiently satisfied that your pod is broken, you can delete your pod with `kubectl delete pod hs-pizza-webapp`.
 
 ### Executing commands inside a pod
 
