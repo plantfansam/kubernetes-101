@@ -44,11 +44,29 @@ As a bleeding edge startup, HyperScale Pizza hosts itopping suggestion serviceli
 * `/resources` — contains useful files invoked in the workshop
 * `/k8s` — an empty directory that we suggest putting Kubernetes manifests in (this is just a suggestion and is not required by Kubernetes).
 
-### How to run the applications
+### Setup
+
+First, make sure you have `pip` by running `which pip` (`pip` is a python package manager, and this application uses python packages). The repo uses python 3.
+
+To check your version of python run `pip -V`. 
+
+If you have other python apps on your computer using 2.* python, you might see that pip is using python 2.*. If this is the case, you will need to use `pip3` instead of `pip` for the next step.
 
 Both the webapp service and the topping suggestion service are [Flask](http://flask.pocoo.org/) apps — Flask is a dead simple Python web framework, which was chosen for its ease of use and intelligibility (as long as you know a programming language, I promise you can figure Flask out in less than 5 minutes).
 
-To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. Before doing this, you'll likely need to run `pip install -r requirements.txt`, which will install the application's requirements on your machine.
+Next, install the requirements for both the `topping-suggestion-service` app and the `webapp-service` on your machine:
+
+`pip install -r ./topping-suggestion/requirements.txt`  
+`pip install -r ./webapp/requirements.txt` 
+
+OR
+
+`pip3 install -r ./topping-suggestion/requirements.txt`  
+`pip3 install -r ./webapp/requirements.txt` 
+
+### How to run the applications
+
+To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. 
 
 Note: the webapp service expects a `TOPPING_COMBO_SUGGESTION_SERVICE_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on `localhost:2222`, you would want to run `TOPPING_COMBO_SUGGESTION_SERVICE_URL=http://localhost:2222 flask app`.
 
