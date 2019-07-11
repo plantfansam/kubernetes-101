@@ -18,7 +18,7 @@ With this background, the [official Kubernetes blurb](https://kubernetes.io/) ma
 
 ## What's a Kubernetes cluster and how do you use one?
 
-In order to put a workload onto Kubernetes, you a copy of Kubernetes installed somewhere. Because a Kubernetes installation often spans more than one host, this installation is typically referred to as a cluster. This clusterability of Kubernetes is very useful for scaling purposes — if you need to run more workloads than your cluster can currently handle, you can add compute capacity by simply adding more machines to the cluster — they do not need to be configured with anything besides the basic Kubernetes softwares. 
+In order to put a workload onto Kubernetes, you need a copy of Kubernetes installed somewhere. Because a Kubernetes installation often spans more than one host, this installation is typically referred to as a cluster. This clusterability of Kubernetes is very useful for scaling purposes — if you need to run more workloads than your cluster can currently handle, you can add compute capacity by simply adding more machines to the cluster — they do not need to be configured with anything besides the basic Kubernetes softwares. 
 
 ### Interacting with a cluster
 
