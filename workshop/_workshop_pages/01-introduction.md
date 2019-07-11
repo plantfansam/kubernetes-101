@@ -50,7 +50,7 @@ Both the webapp service and the topping suggestion service are [Flask](http://fl
 
 To run either application, navigate to its directory and run `flask run -p 1234`, where `1234` is the port on `localhost` you want to serve the application on. Before doing this, you'll likely need to run `pip install -r requirements.txt`, which will install the application's requirements on your machine.
 
-Note: the webapp service expects a `TOPPING_COMBO_SUGGESTION_SERVICE_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on `localhost:2222`, you would want to run `TOPPING_COMBO_SUGGESTION_SERVICE_URL=http://localhost:2222 flask app`.
+Note: the webapp service expects a `TOPPING_COMBO_SUGGESTION_SERVICE_URL` environment variable pointing to a working instance of the topping suggestion service. So if topping suggestion service is running on `localhost:2222`, you would want to run `export TOPPING_COMBO_SUGGESTION_SERVICE_URL=http://localhost:2222` before running `flask run -p 1234` for the webapp.
 
 ## Exercise
 
