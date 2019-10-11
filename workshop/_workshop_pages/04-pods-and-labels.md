@@ -201,7 +201,7 @@ $ kubectl describe node worker-pool-x76v | grep best_pizza_topping
 Annotations:        best_pizza_topping: ham
 ```
 
-Building on the best practice of annotating every object with an opinion about the best pizza topping, let's add a `best_pizza_topping` annotation to the pod manifest in `k8s/hs-pizza-webapp-pod.yaml`:
+Building on the best practice of annotating every object with an opinion about the best pizza topping, let's add a `best_pizza_topping` annotation to the pod manifest in `k8s/hs-pizza-webapp-pod.yaml`. First we need to delete the existing pod otherwise the annotation won't overwrite with: `kubectl delete pods hs-pizza-webapp`. Then edit the `hs-pizza-webapp-pod.yaml` file:
 
 ```yaml
 apiVersion: v1
