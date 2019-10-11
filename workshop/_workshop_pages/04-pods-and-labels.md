@@ -123,7 +123,7 @@ In Kubernetes, you can mark objects in the cluster with arbitrary key/value pair
 
 Let's start our labelling process by launching a second pod into the cluster. Run `kubectl apply -f resources/utility-pod.yaml` to launch a pre-defined pod (feel free to take a look at that pod's manifest — it's pretty boring).
 
-Next, run `kubectl get pods --show-labels` to show the different pods' labels. It's a travesty that `hs-pizza-webapp` doesn't have a `best-pasta-shape` label. We'll add one by running `kubectl label pod hs-pizza-webapp best-pasta-shape=penne`.
+Next, run `kubectl get pods --show-labels` to show the different pods' labels. It's a travesty that `hs-pizza-webapp` doesn't have a `best-pasta-shape` label. We'll add one by running `kubectl label pod hs-pizza-webapp best_pasta_shape=penne`.
 
 Instead of labeling pods by hand, it's often helpful to express labels in the pod manifest. Update the YAML manifest (which we put in `k8s/hs-pizza-webapp-pod.yaml`) for the pizza webapp pod to define this label:
 
