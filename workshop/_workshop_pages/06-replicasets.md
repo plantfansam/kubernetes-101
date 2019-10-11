@@ -88,7 +88,7 @@ You can see that the pod names begin with the name of the replicaSet (`webapp-rs
 
 Try deleting one of the pods with `kubectl delete pod your-podname-here` and see what happens!
 
-Let's update the replicaSet to have three replicas and apply the changes to the cluster with `kubectl apply -f k8s/webapp-rs`:
+Let's update the replicaSet to have three replicas and apply the changes to the cluster with `kubectl apply -f k8s/webapp-replicaset.yaml`:
 
 ```yaml
 apiVersion: apps/v1
